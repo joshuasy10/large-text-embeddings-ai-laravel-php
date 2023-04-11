@@ -18,6 +18,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
+    \App\Helpers\Documents::getOlympicsData();
     return Inertia::render('Home', [
 
     ]);
