@@ -19,6 +19,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
+    dd(Documents::getRemoteCSV('https://cdn.openai.com/API/examples/data/olympics_sections_document_embeddings.csv', 5));
     return Inertia::render('Home', [
         'olympics_data' => Documents::getOlympicsData(5),
     ]);
