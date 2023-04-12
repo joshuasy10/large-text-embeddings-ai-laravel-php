@@ -20,7 +20,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-
+/*
 //    dd(Documents::getOlympicsEmbeddings(3));
 //    $question ="Who won the men's high jump?";
     $question ="Who won the men's high jump?";
@@ -55,7 +55,7 @@ Route::get('/', function () {
         "similar context" => $context,
             "answer" => GPT::chat($question, $context)
         ]
-    );
+    );*/
 
 
     return Inertia::render('Home', [
