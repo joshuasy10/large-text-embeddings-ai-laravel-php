@@ -24,7 +24,7 @@ class GPT
             'model' => 'gpt-3.5-turbo',
             'messages' => self::formatPromptWithContext($message, $context),
             'temperature' => 0,
-            'max_tokens' => 500,
+            'max_tokens' => 150,
             'frequency_penalty' => 0,
             'presence_penalty' => 0,
             'top_p' => 1,
@@ -37,16 +37,16 @@ class GPT
             dd($info);
             throw new Exception(json_encode($info->error));
         }
-        return $response;
+        return $info->choices[0]->message->content;
     }
 
 
 
-    public static function formatPromptWithContext(string $prompt, string $context): array
+    public static function formatPromptWithContext(string $prompt, array $context): array
     {
         $system = "Answer the question as truthfully as possible using the provided text, and if the answer is not contained within the text below, say 'Sorry, I don't know'.
 Context:
-$context";
+".self::formatContext($context);
         $prompt = "$prompt";
 
         return [
@@ -60,6 +60,22 @@ $context";
         ];
     }
 
+    public static function formatContext(array $context): string
+    {
+        // for each item in the context array, add a new line in the context string (if the token limit is not exceeded)
+        $contextString = "";
+        foreach ($context as $item) {
+            // flatten the array
+            if (is_array($item)) {
+                $item = implode(": ", $item);
+            }
+            if (strlen($contextString) + strlen($item) < 8000) {
+                $contextString .= $item . '\n';
+
+            }
+        }
+        return $contextString;
+    }
 
     public static function dotProduct(array $a, array $b): float {
         $result = 0.0;
@@ -70,7 +86,7 @@ $context";
     }
 
 
-    public static function semantic_search(array $questionEmbedding, array $contextEmbeddingsList, int $n = 5): array {
+    public static function semantic_search(array $questionEmbedding, array $contextEmbeddingsList, int $n = 5, bool $returnOnlyIndexesAsArray = true, bool $returnSimilarity = false, bool $returnEmbeddings = false): array {
         // Calculate the similarity scores between the question embedding and each context embedding
         $similarityScores = array_map(function ($embedding) use ($questionEmbedding) {
             // Ensure that $embedding and $queryEmbedding are arrays of numeric values
@@ -91,13 +107,23 @@ $context";
         });
 
         // Return the top N most similar context embeddings
-        return array_slice($sortedContextEmbeddings, 0, $n);
+        $topResults = array_slice($sortedContextEmbeddings, 0, $n);
 
-        // Remove the 'similarity' field from the top results
-        $topResults = array_map(function ($result) {
-            unset($result['similarity']);
-            return $result;
-        }, $topResults);
+        if($returnOnlyIndexesAsArray) {
+            return array_map(function ($result) {
+                return $result['index'];
+            }, $topResults);
+        }
+
+
+        // Remove the necessary fields from the top results
+        if(!$returnEmbeddings || !$returnSimilarity) {
+            return array_map(function ($result) use ($returnEmbeddings, $returnSimilarity) {
+                if (!$returnEmbeddings) unset($result['embeddings']);
+                if (!$returnSimilarity) unset($result['similarity']);
+                return $result;
+            }, $topResults);
+        }
 
         return $topResults;
     }
