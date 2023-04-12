@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 use Exception;
+use Gioni06\Gpt3Tokenizer\Gpt3Tokenizer;
+use Gioni06\Gpt3Tokenizer\Gpt3TokenizerConfig;
 use Orhanerday\OpenAi\OpenAi;
 
 class GPT
@@ -69,9 +71,8 @@ Context:
             if (is_array($item)) {
                 $item = implode(": ", $item);
             }
-            if (strlen($contextString) + strlen($item) < 8000) {
+            if ((self::getTokenCountGPT3($contextString) + self::getTokenCountGPT3($item)) < 2000) {
                 $contextString .= $item . '\n';
-
             }
         }
         return $contextString;
@@ -146,5 +147,12 @@ Context:
             "usage" => $info->usage->total_tokens,
             "model" => $info->model,
         ];
+    }
+
+
+    public static function getTokenCountGPT3($text){
+        $config = new Gpt3TokenizerConfig();
+        $tokenizer = new Gpt3Tokenizer($config);
+        return $tokenizer->count($text);
     }
 }

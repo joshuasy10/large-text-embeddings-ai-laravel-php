@@ -1,6 +1,6 @@
 <template>
 
-    <section class="rounded-xl px-6 py-4 bg-gray-300 text-red-950">
+    <section class="rounded-md px-6 py-4 bg-white text-red-950 min-h-12">
         <slot/>
     </section>
 </template>

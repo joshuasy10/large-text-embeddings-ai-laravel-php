@@ -20,48 +20,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-/*
-//    dd(Documents::getOlympicsEmbeddings(3));
-//    $question ="Who won the men's high jump?";
-    $question ="Who won the men's high jump?";
-    $olympics = Documents::getOlympicsData(350);
-//    dd([
-//        "question" => $question,
-//        "similar" => [
-//            $olympics[236],
-//            $olympics[284],
-//            $olympics[313],
-//            $olympics[222],
-//            $olympics[205],
-//        ]
-//    ]);
-
-
-    $qEmbedding = GPT::getEmbeddings($question)['embeddings'][0];
-    $contextEmbedding = Documents::getOlympicsEmbeddings(10);
-//    dd($contextEmbedding);
-//    dd(GPT::dotProduct($qEmbedding, $contextEmbedding[0]));
-    $indexes = GPT::semantic_search($qEmbedding, Documents::getOlympicsEmbeddings());
-
-
-    // return the olympics data for the $indexes
-    $context = array_map(function($index) use ($olympics){
-        return $olympics[$index];
-    }, $indexes);
-
-    dd([
-        "question" => $question,
-        "prompt" => GPT::formatPromptWithContext($question, $context),
-        "similar context" => $context,
-            "answer" => GPT::chat($question, $context)
-        ]
-    );*/
-
-
-    return Inertia::render('Home', [
-        'olympics_data' => Documents::getOlympicsData(3),
-        'embeddings_data' => Documents::getRemoteCSV('https://cdn.openai.com/API/examples/data/olympics_sections_document_embeddings.csv', 3),
-    ]);
+    return Inertia::render('Home');
 });
 
 

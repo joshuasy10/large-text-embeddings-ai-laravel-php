@@ -20,8 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('olympics_question', function (){
+Route::post('olympics_question', function (){
+//    return [request()->all()];
    $question = request('question');
+//   return [$question];
    $olympics = Documents::getOlympicsData();
    $qEmbedding = GPT::getEmbeddings($question)['embeddings'][0];
    $contextEmbedding = Documents::getOlympicsEmbeddings();
@@ -34,7 +36,6 @@ Route::get('olympics_question', function (){
 
     return [
             "question" => $question,
-//            "prompt" => GPT::formatPromptWithContext($question, $context),
             "context" => $context,
             "answer" => GPT::chat($question, $context)
         ];
