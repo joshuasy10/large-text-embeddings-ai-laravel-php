@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Documents;
+use App\Helpers\GPT;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -19,9 +20,30 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-    dd(Documents::getRemoteCSV('https://cdn.openai.com/API/examples/data/olympics_sections_document_embeddings.csv', 5));
+
+//    dd(Documents::getOlympicsEmbeddings(3));
+    $question ="Who won the men's high jump?";
+    $olympics = Documents::getOlympicsData(350);
+    dd([
+        "question" => $question,
+        "similar" => [
+            $olympics[236],
+            $olympics[284],
+            $olympics[313],
+            $olympics[222],
+            $olympics[205],
+        ]
+    ]);
+
+
+    $qEmbedding = GPT::getEmbeddings($question)['embeddings'][0];
+    $contextEmbedding = Documents::getOlympicsEmbeddings(10);
+//    dd($contextEmbedding);
+//    dd(GPT::dotProduct($qEmbedding, $contextEmbedding[0]));
+    dd(GPT::semantic_search($qEmbedding, Documents::getOlympicsEmbeddings()));
     return Inertia::render('Home', [
-        'olympics_data' => Documents::getOlympicsData(5),
+        'olympics_data' => Documents::getOlympicsData(3),
+        'embeddings_data' => Documents::getRemoteCSV('https://cdn.openai.com/API/examples/data/olympics_sections_document_embeddings.csv', 3),
     ]);
 });
 

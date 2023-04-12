@@ -30,6 +30,7 @@
                         <th>heading</th>
                         <th>content</th>
                         <th>tokens</th>
+                        <th>embedding</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -41,7 +42,12 @@
                                 {{ row.content }}
                             </div>
                         </td>
-                        <td class="px-6 border-l border-gray-300">{{ row.tokens }}</td>
+                        <td class="px-6 border-r border-gray-300">{{ row.tokens }}</td>
+                        <td class="border-l border-gray-300">
+                            <div class="max-h-36 max-w-xl overflow-auto px-6">
+                                {{ embeddings_data[index] }}
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -57,6 +63,10 @@ import Container from "@/Shared/Container.vue";
 
 defineProps({
     olympics_data: {
+        type: Array,
+        required: true
+    },
+    embeddings_data: {
         type: Array,
         required: true
     }
