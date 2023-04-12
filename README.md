@@ -10,6 +10,6 @@ This project uses the information on the 2020 Olympics found on wikipedia.
 <li>We use this array of indexes to get the corresponding text.</li>
 <li>We add the context to the openai chat endpoint, skimming off the top until x tokens have been reached (also adding the original question).</li>
 <li>We then get an answer based on the given context.</li>
-</ol
+</ol>
 
-<img width="769" alt="image" src="https://user-images.githubusercontent.com/92028931/231528734-cb3b99bc-7dc6-46c3-9741-68087b50b6b5.png">
+<img width="769" alt="image" src="https://user-images.githubusercontent.com/92028931/231532505-13be3ee1-8254-4efa-8405-931f52ab4adf.png">
