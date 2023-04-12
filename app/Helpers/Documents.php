@@ -7,8 +7,12 @@ use League\Csv\Reader;
 class Documents
 {
 
-    public static function getOlympicsData(){
+    public static function getOlympicsData($limit = null){
         $url = 'https://cdn.openai.com/API/examples/data/olympics_sections_text.csv';
+        return self::getRemoteCSV($url, $limit);
+    }
+
+    public static function getRemoteCSV($url, $limit = null){
 
         $file = fopen($url, 'r');
 
@@ -25,7 +29,9 @@ class Documents
         }
         fclose($file);
 
-
-        dd(array_slice($ds, 0, 5), $ds);
+        if($limit)
+            return array_slice($ds, 0, $limit);
+        else
+            return $ds;
     }
 }

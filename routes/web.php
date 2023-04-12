@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Documents;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -18,9 +19,8 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-    \App\Helpers\Documents::getOlympicsData();
     return Inertia::render('Home', [
-
+        'olympics_data' => Documents::getOlympicsData(5),
     ]);
 });
 
